@@ -1,0 +1,19 @@
+{
+  "name": "candahub-parody-streaming",
+  "version": "2.0.0",
+  "description": "Professional backend & streaming server for CandaHub parody adult streaming site",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "streaming",
+    "parody",
+    "media-server",
+    "video-stream",
+    "candahub"
+  ],
+  "author": "Antigravity",
+  "license": "ISC"
+}

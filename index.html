@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CandaHub - Free Streaming Videos & Photos, Verified Models</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'hub-black': '#0e0e0e',
+            'hub-charcoal': '#181818',
+            'hub-card': '#1f1f1f',
+            'hub-card-hover': '#292929',
+            'hub-orange': '#FF9000',
+            'hub-orange-hover': '#e07e00',
+            'hub-border': '#2c2c2c',
+            'hub-gray': '#888888',
+            'verified-blue': '#3897f0',
+            'like-green': '#28a745'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Adult Hub True Dark Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0e0e0e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #333333;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #FF9000;
+    }
+
+    body {
+      background-color: #0e0e0e;
+      color: #cccccc;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* Thumbnail Hover preview transition */
+    .video-card:hover .card-thumb-img {
+      transform: scale(1.05);
+    }
+    .video-card:hover .quick-action-overlay {
+      opacity: 1;
+    }
+
+    /* Subtle Orange Glow */
+    .btn-orange-glow {
+      box-shadow: 0 0 14px rgba(255, 144, 0, 0.4);
+    }
+    .btn-orange-glow:hover {
+      box-shadow: 0 0 20px rgba(255, 144, 0, 0.65);
+    }
+
+    /* Modal Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .modal-animate {
+      animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ==================== TOP PREMIUM BANNER ==================== -->
+  <div class="bg-gradient-to-r from-[#141414] via-[#221706] to-[#141414] border-b border-hub-border/60 py-1.5 px-4 text-center text-xs">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <span class="bg-[#FF9000] text-black font-black text-[10px] px-1.5 py-0.5 rounded uppercase">PREMIUM PASS</span>
+        <span class="text-gray-300 hidden sm:inline text-[11px]">Unlimited Full HD 1080p / 4K Streaming & Fast Download Speed</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-[#FF9000] font-bold text-[11px] cursor-pointer hover:underline" onclick="showNotification('Akses Premium Unlimited telah aktif secara otomatis!')">⚡ UPGRADE TO PREMIUM</span>
+        <span class="text-gray-600">|</span>
+        <span class="text-gray-400 text-[11px] font-mono cursor-pointer" id="serverHeaderStatus">Backend Online</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MAIN HEADER ==================== -->
+  <header class="bg-[#141414] border-b border-[#252525] sticky top-0 z-40 shadow-xl">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 flex items-center justify-between gap-2 sm:gap-4">
+      
+      <!-- Brand Logo (Authentic Hub Style) -->
+      <a href="index.html" class="flex items-center text-xl sm:text-2xl font-black tracking-tighter select-none cursor-pointer flex-shrink-0 group">
+        <span class="text-white group-hover:text-gray-200 transition">Canda</span>
+        <span class="bg-[#FF9000] text-black px-1.5 py-0.5 rounded font-black tracking-tight ml-0.5 shadow-sm group-hover:bg-[#e07e00] transition">
+          hub
+        </span>
+      </a>
+
+      <!-- Search Bar -->
+      <div class="flex-1 max-w-2xl mx-1 sm:mx-4">
+        <div class="relative flex items-center">
+          <input 
+            id="searchInput"
+            type="text" 
+            placeholder="Cari video, foto, model (Rara, Natasha, SwiftCasey, BabyRaa)..." 
+            class="w-full bg-[#202020] border border-[#333333] hover:border-[#444444] rounded-l-md py-2 pl-3 sm:pl-4 pr-10 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#FF9000] transition"
+            oninput="handleSearch(this.value)"
+          />
+          <button 
+            onclick="handleSearch(document.getElementById('searchInput').value)" 
+            class="bg-[#FF9000] hover:bg-[#e07e00] text-black font-black px-4 sm:px-5 py-2 sm:py-2.5 rounded-r-md text-xs sm:text-sm flex items-center transition"
+            title="Cari"
+          >
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.4-5.4A7.9 7.9 0 0 0 18 10a8 8 0 1 0-8 8 7.9 7.9 0 0 0 4.89-1.69l5.4 5.4a1 1 0 0 0 1.42-1.42zM4 10a6 6 0 1 1 6 6 6 6 0 0 1-6-6z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-1.5 sm:gap-2 text-xs flex-shrink-0">
+        <button 
+          onclick="filterCategory('video')" 
+          class="hidden md:flex items-center gap-1 bg-[#242424] hover:bg-[#303030] text-gray-200 font-bold px-3 py-1.5 rounded border border-[#383838] transition"
+        >
+          <span>🎬</span> VIDEOS
+        </button>
+
+        <button 
+          onclick="filterCategory('photo')" 
+          class="hidden md:flex items-center gap-1 bg-[#242424] hover:bg-[#303030] text-gray-200 font-bold px-3 py-1.5 rounded border border-[#383838] transition"
+        >
+          <span>📸</span> PHOTOS
+        </button>
+
+        <button 
+          onclick="showNotification('Fitur Upload Video Aktif: File tersimpan otomatis di server lokal.')" 
+          class="bg-[#FF9000] hover:bg-[#e07e00] text-black font-extrabold px-3 py-1.5 rounded transition flex items-center gap-1"
+        >
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          <span class="hidden sm:inline">UPLOAD</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Sub-Navbar: Authentic Adult Hub Complete Navigation -->
+    <nav class="bg-[#1a1a1a] border-t border-[#262626] px-3 sm:px-4 text-xs font-bold text-gray-300 overflow-x-auto shadow-inner">
+      <div class="max-w-7xl mx-auto flex items-center space-x-1 sm:space-x-2 whitespace-nowrap py-1">
+        <button onclick="filterCategory('all')" id="nav-btn-all" class="nav-tab px-3 py-1.5 rounded text-white bg-[#282828] hover:text-[#FF9000] transition">
+          HOME
+        </button>
+        <button onclick="filterCategory('video')" id="nav-btn-video" class="nav-tab px-3 py-1.5 rounded hover:text-[#FF9000] hover:bg-[#222222] transition">
+          VIDEOS
+        </button>
+        <button onclick="filterCategory('photo')" id="nav-btn-photo" class="nav-tab px-3 py-1.5 rounded hover:text-[#FF9000] hover:bg-[#222222] transition">
+          PHOTOS
+        </button>
+        <button onclick="openCategoriesModal()" id="nav-btn-categories" class="nav-tab px-3 py-1.5 rounded hover:text-[#FF9000] hover:bg-[#222222] transition flex items-center gap-1">
+          <span>📁</span> CATEGORIES
+        </button>
+        <button onclick="openModelsModal()" id="nav-btn-models" class="nav-tab px-3 py-1.5 rounded hover:text-[#FF9000] hover:bg-[#222222] transition flex items-center gap-1">
+          <span>👑</span> MODELS & CHANNELS
+        </button>
+        <button onclick="openLiveCamsModal()" id="nav-btn-cams" class="nav-tab px-3 py-1.5 rounded hover:text-red-400 hover:bg-[#222222] transition flex items-center gap-1">
+          <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> LIVE CAMS
+        </button>
+        <button onclick="showFavoritesView()" id="nav-btn-favorites" class="nav-tab px-3 py-1.5 rounded hover:text-[#FF9000] hover:bg-[#222222] transition flex items-center gap-1">
+          <span>⭐</span> FAVORITES (<span id="favCountBadge">0</span>)
+        </button>
+        <button onclick="showHistoryView()" id="nav-btn-history" class="nav-tab px-3 py-1.5 rounded hover:text-[#FF9000] hover:bg-[#222222] transition flex items-center gap-1">
+          <span>🕒</span> HISTORY
+        </button>
+        <button onclick="openCommunityModal()" id="nav-btn-community" class="nav-tab px-3 py-1.5 rounded hover:text-[#FF9000] hover:bg-[#222222] transition flex items-center gap-1">
+          <span>💬</span> COMMUNITY
+        </button>
+        <span class="text-gray-700">|</span>
+        <button onclick="setSorting('views')" id="nav-btn-views" class="nav-tab px-2.5 py-1.5 rounded hover:text-[#FF9000] hover:bg-[#222222] transition">
+          MOST VIEWED
+        </button>
+        <button onclick="setSorting('rating')" id="nav-btn-rating" class="nav-tab px-2.5 py-1.5 rounded hover:text-[#FF9000] hover:bg-[#222222] transition">
+          TOP RATED
+        </button>
+        <button onclick="setSorting('longest')" id="nav-btn-longest" class="nav-tab px-2.5 py-1.5 rounded hover:text-[#FF9000] hover:bg-[#222222] transition">
+          LONGEST
+        </button>
+      </div>
+    </nav>
+
+    <!-- Channels / Models Bar -->
+    <div class="bg-[#121212] border-t border-[#222222] px-3 sm:px-4 py-1.5 overflow-x-auto text-[11px]">
+      <div class="max-w-7xl mx-auto flex items-center space-x-2 whitespace-nowrap">
+        <span class="text-gray-400 font-bold">VERIFIED:</span>
+        <button onclick="filterCategory('all')" class="model-pill active bg-[#FF9000] text-black px-2.5 py-0.5 rounded-full font-bold transition">
+          All
+        </button>
+        <button onclick="filterCategory('rara')" class="model-pill bg-[#202020] hover:bg-[#333333] text-gray-300 px-2.5 py-0.5 rounded-full font-bold transition border border-[#333]">
+          ✓ Rara Official
+        </button>
+        <button onclick="filterCategory('only natasha')" class="model-pill bg-[#202020] hover:bg-[#333333] text-gray-300 px-2.5 py-0.5 rounded-full font-bold transition border border-[#333]">
+          ✓ Natasha Exclusive
+        </button>
+        <button onclick="filterCategory('babyraa -tg @homepascol')" class="model-pill bg-[#202020] hover:bg-[#333333] text-gray-300 px-2.5 py-0.5 rounded-full font-bold transition border border-[#333]">
+          ✓ BabyRaa VIP
+        </button>
+        <button onclick="filterCategory('swiftcasey')" class="model-pill bg-[#202020] hover:bg-[#333333] text-gray-300 px-2.5 py-0.5 rounded-full font-bold transition border border-[#333]">
+          ✓ Swift Casey
+        </button>
+        <button onclick="filterCategory('theresiaacn exclusive')" class="model-pill bg-[#202020] hover:bg-[#333333] text-gray-300 px-2.5 py-0.5 rounded-full font-bold transition border border-[#333]">
+          ✓ Theresia ACN
+        </button>
+        <button onclick="filterCategory('casey cosplayer smp ngenskuy')" class="model-pill bg-[#202020] hover:bg-[#333333] text-gray-300 px-2.5 py-0.5 rounded-full font-bold transition border border-[#333]">
+          ✓ Casey Cosplay
+        </button>
+        <button onclick="filterCategory('neng cessy tiktok')" class="model-pill bg-[#202020] hover:bg-[#333333] text-gray-300 px-2.5 py-0.5 rounded-full font-bold transition border border-[#333]">
+          ✓ Neng Cessy
+        </button>
+        <button onclick="filterCategory('waduh')" class="model-pill bg-[#202020] hover:bg-[#333333] text-gray-300 px-2.5 py-0.5 rounded-full font-bold transition border border-[#333]">
+          ✓ Waduh Premium
+        </button>
+        <button onclick="filterCategory('girllsbutterfly pvlyyy big update')" class="model-pill bg-[#202020] hover:bg-[#333333] text-gray-300 px-2.5 py-0.5 rounded-full font-bold transition border border-[#333]">
+          ✓ Girls Butterfly PVLY
+        </button>
+      </div>
+    </div>
+
+    <!-- Tags Cloud Bar -->
+    <div class="bg-[#0f0f0f] border-t border-[#1d1d1d] px-3 sm:px-4 py-1 overflow-x-auto text-[10px]">
+      <div class="max-w-7xl mx-auto flex items-center space-x-1.5 whitespace-nowrap text-gray-500 font-mono">
+        <span class="text-[#FF9000] font-bold">TAGS:</span>
+        <button onclick="applyTagFilter('4K 60FPS')" class="px-2 py-0.5 rounded bg-[#181818] hover:bg-[#252525] text-gray-400 hover:text-white transition">#4K 60FPS</button>
+        <button onclick="applyTagFilter('1080p HD')" class="px-2 py-0.5 rounded bg-[#181818] hover:bg-[#252525] text-gray-400 hover:text-white transition">#1080p HD</button>
+        <button onclick="applyTagFilter('Cosplay')" class="px-2 py-0.5 rounded bg-[#181818] hover:bg-[#252525] text-gray-400 hover:text-white transition">#Cosplay</button>
+        <button onclick="applyTagFilter('Exclusive')" class="px-2 py-0.5 rounded bg-[#181818] hover:bg-[#252525] text-gray-400 hover:text-white transition">#Exclusive</button>
+        <button onclick="applyTagFilter('VIP')" class="px-2 py-0.5 rounded bg-[#181818] hover:bg-[#252525] text-gray-400 hover:text-white transition">#VIP Vault</button>
+        <button onclick="applyTagFilter('TikTok')" class="px-2 py-0.5 rounded bg-[#181818] hover:bg-[#252525] text-gray-400 hover:text-white transition">#TikTok Viral</button>
+        <button onclick="applyTagFilter('Telegram')" class="px-2 py-0.5 rounded bg-[#181818] hover:bg-[#252525] text-gray-400 hover:text-white transition">#Telegram Leak</button>
+        <button onclick="setSorting('views')" class="px-2 py-0.5 rounded bg-[#181818] hover:bg-[#252525] text-gray-400 hover:text-white transition">#Trending Today</button>
+        <button onclick="setSorting('rating')" class="px-2 py-0.5 rounded bg-[#181818] hover:bg-[#252525] text-gray-400 hover:text-white transition">#Top Rated 99%</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT FEED ==================== -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-4 mt-4 flex-1 w-full">
+
+    <!-- Section Control & Title Bar -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 mb-4 border-b border-[#252525] gap-3">
+      <div>
+        <h1 class="text-lg sm:text-xl font-black text-white flex items-center gap-2 uppercase tracking-wide">
+          <span id="currentFeedTitle">Semua Video & Foto</span>
+          <span id="totalMediaCountBadge" class="bg-[#262626] text-[#FF9000] text-xs font-mono px-2 py-0.5 rounded border border-[#383838]">
+            0 Item
+          </span>
+        </h1>
+        <p class="text-xs text-gray-500 mt-0.5 font-mono" id="feedSubtitle">
+          Streaming lokal HTTP 206 Partial Content • Resolusi Asli 1080p / 4K
+        </p>
+      </div>
+
+      <!-- Sorting & Limit Selectors -->
+      <div class="flex items-center gap-2 flex-wrap text-xs">
+        <span class="text-gray-500">Urutkan:</span>
+        <select 
+          id="sortSelector" 
+          onchange="setSorting(this.value)" 
+          class="bg-[#1c1c1c] text-white border border-[#333] rounded px-2.5 py-1 focus:outline-none focus:border-[#FF9000]"
+        >
+          <option value="recent">Terbaru (Recent)</option>
+          <option value="views">Paling Banyak Dilihat (Most Viewed)</option>
+          <option value="rating">Rating Tertinggi (Top Rated)</option>
+          <option value="longest">Ukuran & Durasi Terpanjang</option>
+        </select>
+
+        <span class="text-gray-500 ml-2">Per Halaman:</span>
+        <select 
+          id="limitSelector" 
+          onchange="changeLimit(parseInt(this.value, 10))" 
+          class="bg-[#1c1c1c] text-white border border-[#333] rounded px-2 py-1 focus:outline-none focus:border-[#FF9000]"
+        >
+          <option value="16">16</option>
+          <option value="24" selected>24</option>
+          <option value="36">36</option>
+          <option value="48">48</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Active Filter Chips -->
+    <div id="filterStatusIndicator" class="hidden mb-3 text-xs bg-[#181818] border border-[#2b2b2b] p-2 rounded flex items-center justify-between text-gray-300">
+      <div class="flex items-center gap-2">
+        <span>Menampilkan hasil pencarian:</span>
+        <span id="activeSearchQueryText" class="text-[#FF9000] font-bold"></span>
+      </div>
+      <button onclick="resetSearch()" class="text-gray-400 hover:text-white font-bold text-[11px] underline">
+        Reset Pencarian
+      </button>
+    </div>
+
+    <!-- VIDEO & PHOTO GRID (HUB PROFESSIONAL 4-COL GRID) -->
+    <div id="mediaFeedGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
+      <!-- Media Cards injected dynamically here -->
+    </div>
+
+    <!-- PAGINATION BAR -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 border-t border-[#252525] mb-12">
+      <div class="text-xs text-gray-400 font-mono">
+        Menampilkan Halaman <span id="currentPageNum" class="text-[#FF9000] font-bold">1</span> dari <span id="totalPageNum" class="text-white font-bold">1</span>
+        (<span id="totalItemsSummary" class="text-gray-300">0</span> Total Media)
+      </div>
+
+      <div id="paginationNavButtons" class="flex items-center gap-1.5 flex-wrap justify-center">
+        <!-- Pagination buttons injected dynamically -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ==================== AUTHENTIC VIDEO PLAYER THEATER MODAL ==================== -->
+  <div id="theaterPlayerModal" class="hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div class="bg-[#141414] border border-[#2c2c2c] rounded-xl max-w-5xl w-full p-3 sm:p-5 shadow-2xl relative modal-animate max-h-[96vh] flex flex-col justify-between">
+      
+      <!-- Modal Top Bar -->
+      <div class="flex items-center justify-between border-b border-[#242424] pb-2.5 mb-3">
+        <div class="flex items-center gap-2">
+          <span class="bg-[#FF9000] text-black font-black text-[10px] px-1.5 py-0.5 rounded">STREAMING HD</span>
+          <span class="text-white font-bold text-xs sm:text-sm truncate max-w-xs sm:max-w-md" id="theaterVideoTitle">
+            Loading Video...
+          </span>
+        </div>
+        <button 
+          onclick="closeTheaterModal()" 
+          class="text-gray-400 hover:text-white bg-[#222222] hover:bg-[#333333] px-3 py-1 rounded text-xs font-bold transition flex items-center gap-1"
+        >
+          ✕ TUTUP
+        </button>
+      </div>
+
+      <!-- Theater Video Player Screen -->
+      <div class="relative aspect-video bg-black rounded-lg overflow-hidden border border-[#2a2a2a] shadow-inner flex items-center justify-center">
+        <video 
+          id="theaterVideoPlayer" 
+          controls 
+          autoplay 
+          playsinline 
+          preload="metadata"
+          class="w-full h-full object-contain"
+          poster=""
+        >
+          <source id="theaterVideoSource" src="" type="video/mp4" />
+          Browser Anda tidak mendukung pemutar video HTML5.
+        </video>
+      </div>
+
+      <!-- Video Details & Actions Bar -->
+      <div class="mt-3 pt-2">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          
+          <!-- Creator / Model Info -->
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-full bg-[#242424] border-2 border-[#FF9000] flex items-center justify-center text-sm font-black text-[#FF9000] uppercase">
+              <span id="theaterModelInitial">R</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-white font-bold text-sm" id="theaterModelName">Model Channel</span>
+                <span class="text-blue-400 text-xs" title="Verified Model">✓</span>
+                <span class="bg-[#242424] text-gray-400 text-[10px] font-mono px-1.5 py-0.2 rounded border border-[#333]">VERIFIED</span>
+              </div>
+              <div class="text-xs text-gray-400 mt-0.5 flex items-center gap-2">
+                <span id="theaterViewsCount">142K views</span>
+                <span>•</span>
+                <span class="text-[#28a745] font-bold" id="theaterLikeRatio">98% Like</span>
+                <span>•</span>
+                <span id="theaterFileSize" class="text-gray-500 font-mono">0 MB</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons (Like, Dislike, Favorite, Download) -->
+          <div class="flex items-center gap-2">
+            <button 
+              id="theaterFavBtn"
+              onclick="toggleTheaterFavorite()" 
+              class="flex items-center gap-1.5 bg-[#202020] hover:bg-[#2b2b2b] text-gray-200 px-3 py-1.5 rounded text-xs font-bold border border-[#333] transition"
+            >
+              <span id="theaterFavIcon">⭐</span> <span id="theaterFavText">FAVORITE</span>
+            </button>
+
+            <button 
+              onclick="toggleLike(this)" 
+              class="flex items-center gap-1.5 bg-[#202020] hover:bg-[#2b2b2b] text-gray-200 px-3 py-1.5 rounded text-xs font-bold border border-[#333] transition"
+            >
+              <span class="text-green-500">👍</span> <span id="theaterLikeCount">1.2K</span>
+            </button>
+
+            <button 
+              onclick="toggleDislike(this)" 
+              class="flex items-center gap-1.5 bg-[#202020] hover:bg-[#2b2b2b] text-gray-200 px-2.5 py-1.5 rounded text-xs font-bold border border-[#333] transition"
+            >
+              <span class="text-red-400">👎</span>
+            </button>
+
+            <a 
+              id="theaterDownloadBtn" 
+              href="#" 
+              download 
+              class="flex items-center gap-1.5 bg-[#FF9000] hover:bg-[#e07e00] text-black px-3.5 py-1.5 rounded text-xs font-black transition"
+            >
+              <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+              <span>DOWNLOAD MP4</span>
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Video Source Path info -->
+        <div class="mt-3 p-2 bg-[#191919] rounded border border-[#272727] text-[11px] text-gray-400 font-mono flex items-center justify-between">
+          <span class="truncate max-w-lg" id="theaterFilePath">File: local</span>
+          <span class="text-[#FF9000] font-bold">HTTP 206 Partial Content (Seek Instan)</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== PHOTO LIGHTBOX MODAL ==================== -->
+  <div id="photoLightboxModal" class="hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-3 sm:p-5" onclick="closePhotoModal()">
+    <div class="max-w-4xl w-full text-center relative modal-animate" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between pb-2 mb-2 text-white border-b border-[#252525]">
+        <div class="flex items-center gap-2">
+          <span class="bg-[#FF9000] text-black font-black text-[10px] px-1.5 py-0.5 rounded">HD PHOTO</span>
+          <span id="lightboxPhotoTitle" class="font-bold text-xs sm:text-sm text-gray-200 truncate max-w-md">Pratinjau Foto</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <a id="lightboxDownloadBtn" href="#" download class="bg-[#FF9000] hover:bg-[#e07e00] text-black font-bold text-xs px-2.5 py-1 rounded">
+            DOWNLOAD
+          </a>
+          <button onclick="closePhotoModal()" class="bg-[#242424] hover:bg-[#333333] text-white font-bold text-xs px-2.5 py-1 rounded">
+            ✕ TUTUP
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-black rounded-lg border border-[#282828] p-1 overflow-hidden shadow-2xl flex items-center justify-center max-h-[82vh]">
+        <img id="lightboxPhotoImg" src="" alt="Pratinjau Foto" class="max-w-full max-h-[80vh] object-contain rounded" />
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== CATEGORIES MODAL DRAWER ==================== -->
+  <div id="categoriesModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6" onclick="closeCategoriesModal()">
+    <div class="bg-[#141414] border border-[#2d2d2d] rounded-xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl relative modal-animate max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b border-[#242424] pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📁</span>
+          <h2 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">ALL CATEGORIES & CHANNELS</h2>
+        </div>
+        <button onclick="closeCategoriesModal()" class="bg-[#242424] hover:bg-[#333] text-white font-bold text-xs px-2.5 py-1 rounded">✕ TUTUP</button>
+      </div>
+      
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 text-xs" id="categoriesGridContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODELS & CHANNELS DIRECTORY MODAL ==================== -->
+  <div id="modelsModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6" onclick="closeModelsModal()">
+    <div class="bg-[#141414] border border-[#2d2d2d] rounded-xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl relative modal-animate max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b border-[#242424] pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">👑</span>
+          <h2 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">TOP VERIFIED MODELS & CREATORS</h2>
+        </div>
+        <button onclick="closeModelsModal()" class="bg-[#242424] hover:bg-[#333] text-white font-bold text-xs px-2.5 py-1 rounded">✕ TUTUP</button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 text-xs" id="modelsGridContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== LIVE CAMS PARODY MODAL ==================== -->
+  <div id="liveCamsModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6" onclick="closeLiveCamsModal()">
+    <div class="bg-[#141414] border border-[#2d2d2d] rounded-xl max-w-4xl w-full p-4 sm:p-6 shadow-2xl relative modal-animate max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b border-[#242424] pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-red-600 animate-ping"></span>
+          <h2 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">LIVE WEBCAMS DIRECTORY (ONLINE NOW)</h2>
+        </div>
+        <button onclick="closeLiveCamsModal()" class="bg-[#242424] hover:bg-[#333] text-white font-bold text-xs px-2.5 py-1 rounded">✕ TUTUP</button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 text-xs" id="liveCamsGridContainer">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== COMMUNITY FORUM MODAL ==================== -->
+  <div id="communityModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6" onclick="closeCommunityModal()">
+    <div class="bg-[#141414] border border-[#2d2d2d] rounded-xl max-w-2xl w-full p-4 sm:p-6 shadow-2xl relative modal-animate max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+      <div class="flex items-center justify-between border-b border-[#242424] pb-3 mb-4">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">💬</span>
+          <h2 class="text-base sm:text-lg font-black text-white uppercase tracking-wider">COMMUNITY FEED & DISCUSSIONS</h2>
+        </div>
+        <button onclick="closeCommunityModal()" class="bg-[#242424] hover:bg-[#333] text-white font-bold text-xs px-2.5 py-1 rounded">✕ TUTUP</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="bg-[#1c1c1c] p-3 rounded-lg border border-[#2b2b2b]">
+          <div class="flex items-center justify-between text-gray-400 text-[11px] mb-1.5">
+            <span class="font-bold text-[#FF9000]">👑 Admin Moderator</span>
+            <span>2 jam yang lalu</span>
+          </div>
+          <p class="text-gray-200">Server telah diperbarui ke sistem HTTP 206 Partial Content! Seluruh 1.032 media sekarang dapat diputar langsung tanpa buffering dan mendukung pencarian instan.</p>
+          <div class="mt-2 text-gray-500 text-[10px] flex items-center gap-3">
+            <span>❤️ 421 Suka</span>
+            <span>💬 38 Balasan</span>
+          </div>
+        </div>
+
+        <div class="bg-[#1c1c1c] p-3 rounded-lg border border-[#2b2b2b]">
+          <div class="flex items-center justify-between text-gray-400 text-[11px] mb-1.5">
+            <span class="font-bold text-blue-400">🔥 User_VIP_69</span>
+            <span>5 jam yang lalu</span>
+          </div>
+          <p class="text-gray-200">Koleksi folder BabyRaa & Natasha mantap banget kualitasnya, jernih 1080p 60fps!</p>
+          <div class="mt-2 text-gray-500 text-[10px] flex items-center gap-3">
+            <span>❤️ 198 Suka</span>
+            <span>💬 14 Balasan</span>
+          </div>
+        </div>
+
+        <div class="bg-[#181818] p-3 rounded-lg border border-[#2b2b2b]">
+          <h4 class="font-bold text-white mb-2">📊 Community Poll: Model / Channel Favorit Kamu?</h4>
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between bg-[#222] p-2 rounded cursor-pointer hover:border hover:border-[#FF9000]" onclick="showNotification('Vote Anda tercatat untuk Rara Official!')">
+              <span>💖 Rara Official</span>
+              <span class="text-[#FF9000] font-bold">42%</span>
+            </div>
+            <div class="flex items-center justify-between bg-[#222] p-2 rounded cursor-pointer hover:border hover:border-[#FF9000]" onclick="showNotification('Vote Anda tercatat untuk Natasha Exclusive!')">
+              <span>💎 Natasha Exclusive</span>
+              <span class="text-[#FF9000] font-bold">29%</span>
+            </div>
+            <div class="flex items-center justify-between bg-[#222] p-2 rounded cursor-pointer hover:border hover:border-[#FF9000]" onclick="showNotification('Vote Anda tercatat untuk BabyRaa VIP!')">
+              <span>🍼 BabyRaa VIP</span>
+              <span class="text-[#FF9000] font-bold">18%</span>
+            </div>
+            <div class="flex items-center justify-between bg-[#222] p-2 rounded cursor-pointer hover:border hover:border-[#FF9000]" onclick="showNotification('Vote Anda tercatat untuk Swift Casey!')">
+              <span>⚡ Swift Casey</span>
+              <span class="text-[#FF9000] font-bold">11%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST NOTIFICATION ==================== -->
+  <div id="toastNotification" class="hidden fixed bottom-6 right-6 z-50 bg-[#1c1c1c] border border-[#FF9000] text-white px-4 py-2.5 rounded-lg shadow-2xl text-xs flex items-center gap-2">
+    <span class="text-[#FF9000] text-base">ℹ️</span>
+    <span id="toastMessage">Pemberitahuan</span>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-[#121212] border-t border-[#222222] py-8 px-4 text-xs text-gray-500 mt-auto">
+    <div class="max-w-7xl mx-auto space-y-4">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-[#1f1f1f] pb-6">
+        <div class="flex items-center text-xl font-black tracking-tighter">
+          <span class="text-white">Canda</span>
+          <span class="bg-[#FF9000] text-black px-1.5 py-0.5 rounded ml-0.5">hub</span>
+        </div>
+        <div class="flex items-center gap-4 text-gray-400">
+          <span class="hover:text-white cursor-pointer" onclick="filterCategory('video')">Videos</span>
+          <span class="hover:text-white cursor-pointer" onclick="filterCategory('photo')">Photos</span>
+          <span class="hover:text-white cursor-pointer" onclick="filterCategory('all')">Models</span>
+          <span class="hover:text-white cursor-pointer" onclick="showNotification('DMCA Policy: Server lokal pribadi offline.')">DMCA</span>
+          <span class="hover:text-white cursor-pointer" onclick="showNotification('Privacy: Data tersimpan secara privat di komputer Anda.')">Privacy</span>
+          <span class="hover:text-white cursor-pointer" onclick="showNotification('18 U.S.C. 2257 Record-Keeping Requirements Compliance Statement.')">2257 Compliance</span>
+        </div>
+      </div>
+      <div class="text-[11px] text-gray-600 leading-relaxed text-center sm:text-left">
+        The website contains local media content for personal storage & private viewing. Powered by Node.js HTTP 206 Partial Content Streaming Engine. All actors & models depicted were 18 years of age or older at the time of depiction.
+      </div>
+      <div class="text-[10px] text-gray-700 font-mono text-center sm:text-left">
+        © 2026 CandaHub Local Media Server Engine • d:\jeus
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT FRONTEND LOGIC ==================== -->
+  <script>
+    // State management
+    let allMedia = [];
+    let currentCategory = 'all';
+    let currentSort = 'recent';
+    let currentSearch = '';
+    let currentPage = 1;
+    let itemsPerPage = 24;
+    let isConnected = false;
+    let activeTag = '';
+    let currentActiveView = 'main'; // 'main', 'favorites', 'history'
+    let currentPlayingItem = null;
+
+    // LocalStorage for Favorites & History
+    let favoritesList = JSON.parse(localStorage.getItem('candahub_favs') || '[]');
+    let watchHistory = JSON.parse(localStorage.getItem('candahub_history') || '[]');
+
+    const API_BASE = window.location.protocol.startsWith('http') 
+      ? window.location.origin 
+      : 'http://localhost:3000';
+
+    /**
+     * Initialize media data from backend or fallback to all-media.json
+     */
+    async function initApp() {
+      updateFavBadge();
+
+      try {
+        const statsRes = await fetch(`${API_BASE}/api/stats`).catch(() => null);
+        if (statsRes && statsRes.ok) {
+          isConnected = true;
+          const stats = await statsRes.json();
+          document.getElementById('serverHeaderStatus').innerText = `⚡ Backend Aktif: ${stats.totalFiles} Media (${stats.totalVideos} Video, ${stats.totalPhotos} Foto)`;
+        }
+      } catch (e) {
+        isConnected = false;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/all-media.json`).catch(() => fetch('all-media.json'));
+        if (res && res.ok) {
+          allMedia = await res.json();
+        }
+      } catch (err) {
+        console.warn('Gagal memuat all-media.json, mencoba /api/media:', err);
+      }
+
+      if (!allMedia || allMedia.length === 0) {
+        try {
+          const res = await fetch(`${API_BASE}/api/media?page=1&limit=2500`);
+          const data = await res.json();
+          allMedia = data.items || data;
+        } catch (e) {}
+      }
+
+      if (!isConnected && allMedia && allMedia.length > 0) {
+        const vids = allMedia.filter(m => m.type === 'video').length;
+        const photos = allMedia.filter(m => m.type === 'photo').length;
+        const statusEl = document.getElementById('serverHeaderStatus');
+        if (statusEl) {
+          statusEl.innerText = `📁 Mode File: ${allMedia.length} Media (${vids} Video, ${photos} Foto)`;
+        }
+      }
+
+      renderFeed();
+      initModalsData();
+    }
+
+    function updateFavBadge() {
+      const badge = document.getElementById('favCountBadge');
+      if (badge) badge.innerText = favoritesList.length;
+    }
+
+    /**
+     * Filter & sort local dataset
+     */
+    function getProcessedData() {
+      let baseList = allMedia;
+
+      if (currentActiveView === 'favorites') {
+        baseList = allMedia.filter(item => favoritesList.includes(item.src));
+      } else if (currentActiveView === 'history') {
+        baseList = watchHistory.map(src => allMedia.find(item => item.src === src)).filter(Boolean);
+      }
+
+      let filtered = baseList.filter(item => {
+        // Category / Folder Filter
+        let matchCat = true;
+        if (currentActiveView === 'main') {
+          if (currentCategory === 'all') {
+            matchCat = true;
+          } else if (currentCategory === 'video') {
+            matchCat = (item.type === 'video');
+          } else if (currentCategory === 'photo') {
+            matchCat = (item.type === 'photo');
+          } else {
+            matchCat = (item.folder.toLowerCase() === currentCategory.toLowerCase());
+          }
+        }
+
+        // Tag filter
+        let matchTag = true;
+        if (activeTag) {
+          const tagLower = activeTag.toLowerCase();
+          matchTag = (item.tag && item.tag.toLowerCase().includes(tagLower)) ||
+                     (item.title && item.title.toLowerCase().includes(tagLower)) ||
+                     (item.folder && item.folder.toLowerCase().includes(tagLower));
+        }
+
+        // Search query filter
+        let matchSearch = true;
+        if (currentSearch.trim() !== '') {
+          const q = currentSearch.toLowerCase();
+          matchSearch = (item.title && item.title.toLowerCase().includes(q)) ||
+                        (item.model && item.model.toLowerCase().includes(q)) ||
+                        (item.filename && item.filename.toLowerCase().includes(q)) ||
+                        (item.folder && item.folder.toLowerCase().includes(q));
+        }
+
+        return matchCat && matchTag && matchSearch;
+      });
+
+      // Sorting
+      if (currentSort === 'views') {
+        filtered.sort((a, b) => (parseInt(b.views) || 0) - (parseInt(a.views) || 0));
+      } else if (currentSort === 'rating') {
+        filtered.sort((a, b) => (parseInt(b.rating) || 0) - (parseInt(a.rating) || 0));
+      } else if (currentSort === 'longest') {
+        filtered.sort((a, b) => b.size - a.size);
+      }
+
+      return filtered;
+    }
+
+    /**
+     * Render the video & photo grid
+     */
+    function renderFeed() {
+      const filtered = getProcessedData();
+      const totalItems = filtered.length;
+      const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+
+      // Update counters in UI
+      document.getElementById('totalMediaCountBadge').innerText = `${totalItems.toLocaleString()} Item`;
+      document.getElementById('totalItemsSummary').innerText = totalItems.toLocaleString();
+      document.getElementById('currentPageNum').innerText = currentPage;
+      document.getElementById('totalPageNum').innerText = totalPages;
+
+      // Slice items for current page
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const pageItems = filtered.slice(startIndex, startIndex + itemsPerPage);
+
+      const grid = document.getElementById('mediaFeedGrid');
+      grid.innerHTML = '';
+
+      if (pageItems.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-16 text-center text-gray-500 bg-[#161616] rounded-xl border border-[#262626]">
+            <svg class="w-12 h-12 mx-auto text-gray-600 mb-2 fill-current" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            <div class="text-sm font-bold text-gray-300">Tidak ada media di tampilan ini</div>
+            <div class="text-xs text-gray-600 mt-1">Gunakan kata kunci lain atau klik tab HOME</div>
+          </div>
+        `;
+        renderPagination(totalPages);
+        return;
+      }
+
+      pageItems.forEach(item => {
+        const isVideo = (item.type === 'video');
+        const cleanPoster = encodeURI(item.poster || item.src);
+        const modelName = item.model || item.folder.toUpperCase();
+        const isFav = favoritesList.includes(item.src);
+
+        const card = document.createElement('div');
+        card.className = "video-card bg-[#181818] border border-[#262626] hover:border-[#FF9000] rounded-md overflow-hidden transition cursor-pointer flex flex-col justify-between group shadow-lg relative";
+        
+        card.onclick = (e) => {
+          // If clicked the star favorite button directly, don't open modal
+          if (e.target.closest('.card-fav-btn')) return;
+
+          if (isVideo) {
+            openTheater(item);
+          } else {
+            openPhoto(item);
+          }
+        };
+
+        card.innerHTML = `
+          <div>
+            <!-- Thumbnail 16:9 -->
+            <div class="relative aspect-video bg-[#0a0a0a] overflow-hidden">
+              <img 
+                src="${cleanPoster}" 
+                alt="${item.title}" 
+                class="card-thumb-img w-full h-full object-cover transition-transform duration-300"
+                loading="lazy"
+                decoding="async"
+                onerror="this.src='rara/1.jpg'"
+              />
+
+              <!-- Top Left: Quality Badge -->
+              <div class="absolute top-1.5 left-1.5 flex items-center gap-1">
+                <span class="bg-black/80 text-[#FF9000] font-black text-[9px] px-1.5 py-0.5 rounded tracking-wider border border-[#FF9000]/40">
+                  ${item.tag || (isVideo ? '1080p HD' : 'HD PHOTO')}
+                </span>
+              </div>
+
+              <!-- Top Right: Favorite Quick Star -->
+              <button 
+                onclick="toggleCardFav('${encodeURIComponent(item.src)}', event)" 
+                class="card-fav-btn absolute top-1.5 right-1.5 bg-black/75 hover:bg-black p-1 rounded-full text-xs transition z-10"
+                title="${isFav ? 'Hapus dari Favorit' : 'Tambah ke Favorit'}"
+              >
+                <span class="${isFav ? 'text-[#FF9000]' : 'text-gray-400 hover:text-white'}">⭐</span>
+              </button>
+
+              <!-- Bottom Right: Duration Badge -->
+              <div class="absolute bottom-1.5 right-1.5 bg-black/90 text-white font-mono text-[10px] font-bold px-1.5 py-0.5 rounded flex items-center gap-1">
+                ${isVideo ? '▶ ' + (item.duration || '12:45') : '📷 FOTO'}
+              </div>
+
+              <!-- Quick action hover overlay icon -->
+              <div class="quick-action-overlay absolute inset-0 bg-black/40 opacity-0 transition-opacity flex items-center justify-center">
+                <div class="w-10 h-10 rounded-full bg-[#FF9000]/90 text-black flex items-center justify-center font-black text-sm pl-0.5 shadow-xl">
+                  ${isVideo ? '▶' : '🔍'}
+                </div>
+              </div>
+            </div>
+
+            <!-- Meta details under thumb -->
+            <div class="p-2 sm:p-2.5">
+              <h3 class="text-xs font-bold text-gray-100 group-hover:text-[#FF9000] transition line-clamp-2 leading-snug" title="${item.title}">
+                ${item.title}
+              </h3>
+              
+              <div class="mt-1.5 flex items-center justify-between text-[11px] text-gray-400">
+                <span class="text-gray-300 font-semibold truncate max-w-[130px] flex items-center gap-1">
+                  ${modelName}
+                  <span class="text-[#3897f0] text-[10px]">✓</span>
+                </span>
+                <span class="text-green-500 font-bold">${item.rating || '96%'}</span>
+              </div>
+
+              <div class="mt-0.5 flex items-center justify-between text-[10px] text-gray-500 font-mono">
+                <span>${item.views || '120K'} views</span>
+                <span>${item.sizeFormatted || ''}</span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+
+      renderPagination(totalPages);
+    }
+
+    /**
+     * Card Favorite toggle
+     */
+    function toggleCardFav(encodedSrc, e) {
+      if (e) e.stopPropagation();
+      const src = decodeURIComponent(encodedSrc);
+      const idx = favoritesList.indexOf(src);
+      if (idx > -1) {
+        favoritesList.splice(idx, 1);
+        showNotification('Dihapus dari daftar Favorit');
+      } else {
+        favoritesList.unshift(src);
+        showNotification('Ditambahkan ke daftar Favorit ⭐');
+      }
+      localStorage.setItem('candahub_favs', JSON.stringify(favoritesList));
+      updateFavBadge();
+      renderFeed();
+    }
+
+    function toggleTheaterFavorite() {
+      if (!currentPlayingItem) return;
+      const src = currentPlayingItem.src;
+      const idx = favoritesList.indexOf(src);
+      const favText = document.getElementById('theaterFavText');
+      const favIcon = document.getElementById('theaterFavIcon');
+
+      if (idx > -1) {
+        favoritesList.splice(idx, 1);
+        favText.innerText = 'FAVORITE';
+        favIcon.className = '';
+        showNotification('Dihapus dari Favorit');
+      } else {
+        favoritesList.unshift(src);
+        favText.innerText = 'FAVORITED';
+        favIcon.className = 'text-[#FF9000]';
+        showNotification('Tersimpan di Favorit ⭐');
+      }
+      localStorage.setItem('candahub_favs', JSON.stringify(favoritesList));
+      updateFavBadge();
+    }
+
+    /**
+     * Show Favorites and History views
+     */
+    function showFavoritesView() {
+      currentActiveView = 'favorites';
+      currentPage = 1;
+      activeTag = '';
+      document.getElementById('currentFeedTitle').innerText = '⭐ My Favorite Videos & Photos';
+      renderFeed();
+    }
+
+    function showHistoryView() {
+      currentActiveView = 'history';
+      currentPage = 1;
+      activeTag = '';
+      document.getElementById('currentFeedTitle').innerText = '🕒 Recently Watched Videos';
+      renderFeed();
+    }
+
+    function applyTagFilter(tag) {
+      activeTag = tag;
+      currentActiveView = 'main';
+      currentPage = 1;
+      document.getElementById('currentFeedTitle').innerText = `Tag: #${tag}`;
+      renderFeed();
+      showNotification(`Memfilter media dengan tag: #${tag}`);
+    }
+
+    /**
+     * Render pagination buttons
+     */
+    function renderPagination(totalPages) {
+      const container = document.getElementById('paginationNavButtons');
+      container.innerHTML = '';
+
+      if (totalPages <= 1) return;
+
+      // Prev Button
+      const prevBtn = document.createElement('button');
+      prevBtn.className = `px-3 py-1 rounded text-xs font-bold border border-[#333] ${currentPage > 1 ? 'bg-[#222] hover:bg-[#FF9000] hover:text-black text-white' : 'bg-[#161616] text-gray-600 cursor-not-allowed'}`;
+      prevBtn.innerText = '◀ PREV';
+      prevBtn.disabled = (currentPage <= 1);
+      prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; renderFeed(); window.scrollTo({top: 0, behavior: 'smooth'}); } };
+      container.appendChild(prevBtn);
+
+      // Page numbers (smart sliding window)
+      let startP = Math.max(1, currentPage - 2);
+      let endP = Math.min(totalPages, currentPage + 2);
+
+      if (startP > 1) {
+        addPageBtn(1, container);
+        if (startP > 2) {
+          const dots = document.createElement('span');
+          dots.className = 'text-gray-600 px-1 text-xs';
+          dots.innerText = '...';
+          container.appendChild(dots);
+        }
+      }
+
+      for (let p = startP; p <= endP; p++) {
+        addPageBtn(p, container);
+      }
+
+      if (endP < totalPages) {
+        if (endP < totalPages - 1) {
+          const dots = document.createElement('span');
+          dots.className = 'text-gray-600 px-1 text-xs';
+          dots.innerText = '...';
+          container.appendChild(dots);
+        }
+        addPageBtn(totalPages, container);
+      }
+
+      // Next Button
+      const nextBtn = document.createElement('button');
+      nextBtn.className = `px-3 py-1 rounded text-xs font-bold border border-[#333] ${currentPage < totalPages ? 'bg-[#222] hover:bg-[#FF9000] hover:text-black text-white' : 'bg-[#161616] text-gray-600 cursor-not-allowed'}`;
+      nextBtn.innerText = 'NEXT ▶';
+      nextBtn.disabled = (currentPage >= totalPages);
+      nextBtn.onclick = () => { if (currentPage < totalPages) { currentPage++; renderFeed(); window.scrollTo({top: 0, behavior: 'smooth'}); } };
+      container.appendChild(nextBtn);
+    }
+
+    function addPageBtn(p, container) {
+      const btn = document.createElement('button');
+      const isCurrent = (p === currentPage);
+      btn.className = `px-3 py-1 rounded text-xs font-bold border transition ${isCurrent ? 'bg-[#FF9000] text-black border-[#FF9000]' : 'bg-[#1c1c1c] text-gray-300 border-[#333] hover:border-gray-500'}`;
+      btn.innerText = p;
+      btn.onclick = () => {
+        currentPage = p;
+        renderFeed();
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      };
+      container.appendChild(btn);
+    }
+
+    /**
+     * Filter by Category / Folder
+     */
+    function filterCategory(cat) {
+      currentActiveView = 'main';
+      currentCategory = cat;
+      activeTag = '';
+      currentPage = 1;
+
+      // Update pills UI
+      document.querySelectorAll('.model-pill').forEach(btn => {
+        btn.classList.remove('bg-[#FF9000]', 'text-black');
+        btn.classList.add('bg-[#202020]', 'text-gray-300');
+      });
+
+      // Update title text
+      const titles = {
+        'all': 'Semua Video & Foto',
+        'video': 'Katalog Semua Video HD',
+        'photo': 'Katalog Semua Foto HD',
+        'rara': 'Rara Official Collection',
+        'only natasha': 'Natasha Exclusive Vault',
+        'babyraa -tg @homepascol': 'BabyRaa VIP Channel',
+        'swiftcasey': 'Swift Casey Collection',
+        'theresiaacn exclusive': 'Theresia ACN Exclusive',
+        'casey cosplayer smp ngenskuy': 'Casey Cosplay Channel',
+        'neng cessy tiktok': 'Neng Cessy TikTok Vault',
+        'waduh': 'Waduh Premium Channel',
+        'girllsbutterfly pvlyyy big update': 'Girls Butterfly PVLY Collection'
+      };
+      document.getElementById('currentFeedTitle').innerText = titles[cat.toLowerCase()] || cat.toUpperCase();
+
+      renderFeed();
+    }
+
+    /**
+     * Search Handler with debounce
+     */
+    let searchTimeout = null;
+    function handleSearch(val) {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        currentSearch = val;
+        currentPage = 1;
+
+        const indicator = document.getElementById('filterStatusIndicator');
+        const queryText = document.getElementById('activeSearchQueryText');
+        if (val.trim() !== '') {
+          indicator.classList.remove('hidden');
+          queryText.innerText = `"${val}"`;
+        } else {
+          indicator.classList.add('hidden');
+        }
+
+        renderFeed();
+      }, 250);
+    }
+
+    function resetSearch() {
+      document.getElementById('searchInput').value = '';
+      handleSearch('');
+    }
+
+    /**
+     * Sorting Handler
+     */
+    function setSorting(sortVal) {
+      currentSort = sortVal;
+      document.getElementById('sortSelector').value = sortVal;
+      currentPage = 1;
+      renderFeed();
+    }
+
+    function changeLimit(limit) {
+      itemsPerPage = limit;
+      currentPage = 1;
+      renderFeed();
+    }
+
+    /**
+     * Theater Video Player Modal
+     */
+    function openTheater(item) {
+      currentPlayingItem = item;
+
+      // Add to watch history
+      if (!watchHistory.includes(item.src)) {
+        watchHistory.unshift(item.src);
+        if (watchHistory.length > 50) watchHistory.pop();
+        localStorage.setItem('candahub_history', JSON.stringify(watchHistory));
+      }
+
+      const modal = document.getElementById('theaterPlayerModal');
+      const video = document.getElementById('theaterVideoPlayer');
+      const source = document.getElementById('theaterVideoSource');
+      const title = document.getElementById('theaterVideoTitle');
+      const model = document.getElementById('theaterModelName');
+      const initial = document.getElementById('theaterModelInitial');
+      const views = document.getElementById('theaterViewsCount');
+      const ratio = document.getElementById('theaterLikeRatio');
+      const size = document.getElementById('theaterFileSize');
+      const path = document.getElementById('theaterFilePath');
+      const downloadBtn = document.getElementById('theaterDownloadBtn');
+      const likeCount = document.getElementById('theaterLikeCount');
+      const favText = document.getElementById('theaterFavText');
+      const favIcon = document.getElementById('theaterFavIcon');
+
+      title.innerText = item.title;
+      model.innerText = item.model || item.folder.toUpperCase();
+      initial.innerText = (item.model || item.folder || 'M').charAt(0).toUpperCase();
+      views.innerText = `${item.views || '120K'} views`;
+      ratio.innerText = `${item.rating || '96%'} Like`;
+      size.innerText = item.sizeFormatted || '';
+      path.innerText = `File: ${item.src}`;
+      likeCount.innerText = `${Math.floor((parseInt(item.views) || 100) * 0.94)}K`;
+
+      const isFav = favoritesList.includes(item.src);
+      favText.innerText = isFav ? 'FAVORITED' : 'FAVORITE';
+      favIcon.className = isFav ? 'text-[#FF9000]' : '';
+
+      const videoUrl = encodeURI(item.src);
+      source.src = videoUrl;
+      downloadBtn.href = videoUrl;
+      video.poster = encodeURI(item.poster || '');
+      video.load();
+      video.play().catch(() => {});
+
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeTheaterModal() {
+      const modal = document.getElementById('theaterPlayerModal');
+      const video = document.getElementById('theaterVideoPlayer');
+      const source = document.getElementById('theaterVideoSource');
+      video.pause();
+      if (source) source.removeAttribute('src');
+      video.removeAttribute('src');
+      video.load(); // Menghentikan streaming dan unduhan background seketika
+      modal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    /**
+     * Photo Lightbox Modal
+     */
+    function openPhoto(item) {
+      const modal = document.getElementById('photoLightboxModal');
+      const img = document.getElementById('lightboxPhotoImg');
+      const title = document.getElementById('lightboxPhotoTitle');
+      const downloadBtn = document.getElementById('lightboxDownloadBtn');
+
+      title.innerText = `${item.title} (${item.sizeFormatted})`;
+      img.src = encodeURI(item.src);
+      downloadBtn.href = encodeURI(item.src);
+
+      modal.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePhotoModal() {
+      const modal = document.getElementById('photoLightboxModal');
+      modal.classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    /**
+     * Modal Renderers: Categories, Models, Live Cams
+     */
+    function initModalsData() {
+      const modelConfigs = [
+        { id: 'rara', name: 'Rara Official', desc: 'Koleksi lengkap Rara HD' },
+        { id: 'only natasha', name: 'Natasha Exclusive', desc: 'Video & foto eksklusif Natasha' },
+        { id: 'babyraa -tg @homepascol', name: 'BabyRaa VIP', desc: 'Telegram VIP archive' },
+        { id: 'swiftcasey', name: 'Swift Casey', desc: 'Full series Swift Casey HD' },
+        { id: 'theresiaacn exclusive', name: 'Theresia ACN', desc: 'Koleksi premium Theresia' },
+        { id: 'casey cosplayer smp ngenskuy', name: 'Casey Cosplay', desc: 'Cosplay scenes & photos' },
+        { id: 'neng cessy tiktok', name: 'Neng Cessy TikTok', desc: 'Viral clips & compilations' },
+        { id: 'waduh', name: 'Waduh Premium', desc: 'Kumpulan scene waduh HD' },
+        { id: 'girllsbutterfly pvlyyy big update', name: 'Girls Butterfly PVLY', desc: 'Big Update Collection HD' }
+      ];
+
+      // Dynamically count items from allMedia & omit deleted folders
+      const categories = modelConfigs.map(cat => {
+        const matches = allMedia.filter(m => (m.folder || '').toLowerCase() === cat.id.toLowerCase());
+        const total = matches.length;
+        const vids = matches.filter(m => m.type === 'video').length;
+        const photos = matches.filter(m => m.type === 'photo').length;
+        let count = `${total} Media`;
+        if (vids > 0 && photos === 0) count = `${vids} Video`;
+        else if (photos > 0 && vids === 0) count = `${photos} Foto`;
+        else if (vids > 0 && photos > 0) count = `${vids} Video • ${photos} Foto`;
+        return {
+          ...cat,
+          count: count,
+          totalCount: total
+        };
+      }).filter(c => c.totalCount > 0);
+
+      // Also dynamically discover any additional folders in allMedia
+      const knownIds = new Set(modelConfigs.map(m => m.id.toLowerCase()));
+      const extraFolders = [...new Set(allMedia.map(m => (m.folder || '').toLowerCase()))]
+        .filter(f => f && !knownIds.has(f));
+      
+      for (const extra of extraFolders) {
+        const matches = allMedia.filter(m => (m.folder || '').toLowerCase() === extra);
+        const first = matches[0];
+        const name = (first && first.model) ? first.model : extra.toUpperCase();
+        const vids = matches.filter(m => m.type === 'video').length;
+        const photos = matches.filter(m => m.type === 'photo').length;
+        let count = `${matches.length} Media`;
+        if (vids > 0 && photos === 0) count = `${vids} Video`;
+        else if (photos > 0 && vids === 0) count = `${photos} Foto`;
+        else if (vids > 0 && photos > 0) count = `${vids} Video • ${photos} Foto`;
+
+        categories.push({
+          id: extra,
+          name: name,
+          desc: `Koleksi ${name} HD`,
+          count: count,
+          totalCount: matches.length
+        });
+      }
+
+      // Populate Categories Modal
+      const catContainer = document.getElementById('categoriesGridContainer');
+      if (catContainer) {
+        catContainer.innerHTML = categories.map(cat => `
+          <div onclick="filterCategory('${cat.id}'); closeCategoriesModal();" class="bg-[#1b1b1b] border border-[#2b2b2b] hover:border-[#FF9000] p-3 rounded-lg cursor-pointer transition flex flex-col justify-between group">
+            <div>
+              <div class="text-sm font-bold text-white group-hover:text-[#FF9000]">${cat.name}</div>
+              <div class="text-[11px] text-gray-500 mt-0.5">${cat.desc}</div>
+            </div>
+            <div class="mt-3 text-[10px] text-[#FF9000] font-mono font-bold">${cat.count} ➜</div>
+          </div>
+        `).join('');
+      }
+
+      // Populate Models Modal
+      const modelsContainer = document.getElementById('modelsGridContainer');
+      if (modelsContainer) {
+        modelsContainer.innerHTML = categories.map((cat, idx) => `
+          <div class="bg-[#1b1b1b] border border-[#2b2b2b] p-3.5 rounded-lg flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-full bg-[#252525] border-2 border-[#FF9000] flex items-center justify-center font-black text-[#FF9000] text-base">
+                ${cat.name.charAt(0)}
+              </div>
+              <div>
+                <div class="font-bold text-white flex items-center gap-1">
+                  <span>${cat.name}</span>
+                  <span class="text-blue-400 text-xs">✓</span>
+                </div>
+                <div class="text-[10px] text-gray-400 font-mono mt-0.5">${Math.floor(180 + idx * 45)}K Subscribers • ${cat.count}</div>
+              </div>
+            </div>
+            <button onclick="filterCategory('${cat.id}'); closeModelsModal();" class="bg-[#FF9000] hover:bg-[#e07e00] text-black font-black text-xs px-2.5 py-1 rounded">
+              VIEW
+            </button>
+          </div>
+        `).join('');
+      }
+
+      // Populate Live Cams Modal
+      const camsContainer = document.getElementById('liveCamsGridContainer');
+      if (camsContainer) {
+        const cams = [
+          { name: 'Rara_VIP_Room', viewers: '1,420', status: 'Online (Jakarta)' },
+          { name: 'Natasha_Private_Cam', viewers: '2,890', status: 'Online (Surabaya)' },
+          { name: 'BabyRaa_Live', viewers: '980', status: 'Online (Bandung)' },
+          { name: 'SwiftCasey_Show', viewers: '3,120', status: 'Online (Bali)' },
+          { name: 'Theresia_Exclusive', viewers: '1,850', status: 'Online (Medan)' },
+          { name: 'Cessy_TikTok_Live', viewers: '840', status: 'Online (Semarang)' }
+        ];
+
+        camsContainer.innerHTML = cams.map(cam => `
+          <div class="bg-[#1b1b1b] border border-[#2b2b2b] hover:border-[#FF9000] rounded-lg overflow-hidden cursor-pointer" onclick="showNotification('Menghubungkan ke siaran webcam ${cam.name}...')">
+            <div class="aspect-video bg-black relative flex items-center justify-center">
+              <div class="w-12 h-12 rounded-full border-2 border-red-500 flex items-center justify-center animate-pulse text-red-500 font-bold">
+                LIVE
+              </div>
+              <div class="absolute top-2 left-2 bg-red-600 text-white font-black text-[9px] px-2 py-0.5 rounded flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span> LIVE
+              </div>
+              <div class="absolute bottom-2 right-2 bg-black/80 text-white font-mono text-[10px] px-1.5 py-0.5 rounded">
+                👥 ${cam.viewers} viewers
+              </div>
+            </div>
+            <div class="p-2.5">
+              <div class="font-bold text-white text-xs">${cam.name}</div>
+              <div class="text-[10px] text-green-400 font-mono mt-0.5">🟢 ${cam.status}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    function openCategoriesModal() {
+      document.getElementById('categoriesModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCategoriesModal() {
+      document.getElementById('categoriesModal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    function openModelsModal() {
+      document.getElementById('modelsModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModelsModal() {
+      document.getElementById('modelsModal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    function openLiveCamsModal() {
+      document.getElementById('liveCamsModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLiveCamsModal() {
+      document.getElementById('liveCamsModal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    function openCommunityModal() {
+      document.getElementById('communityModal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCommunityModal() {
+      document.getElementById('communityModal').classList.add('hidden');
+      document.body.style.overflow = 'auto';
+    }
+
+    /**
+     * Like / Dislike Toggles
+     */
+    function toggleLike(btn) {
+      btn.classList.toggle('text-[#FF9000]');
+      showNotification('Terima kasih atas voting Like Anda!');
+    }
+    function toggleDislike(btn) {
+      btn.classList.toggle('text-red-500');
+      showNotification('Voting Dislike tercatat.');
+    }
+
+    /**
+     * Toast notifications
+     */
+    let toastTimeout = null;
+    function showNotification(msg) {
+      const toast = document.getElementById('toastNotification');
+      const text = document.getElementById('toastMessage');
+      text.innerText = msg;
+      toast.classList.remove('hidden');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3000);
+    }
+
+    // Keyboard Shortcuts (Esc to close modal)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeTheaterModal();
+        closePhotoModal();
+        closeCategoriesModal();
+        closeModelsModal();
+        closeLiveCamsModal();
+        closeCommunityModal();
+      }
+    });
+
+    // Run on startup
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
